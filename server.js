@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors'); // 1. Importação do CORS
 const User = require('./models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -8,9 +9,12 @@ const auth = require('./auth');
 
 // 1. Importação das Rotas Modulares
 const eventoRoutes = require('./routes/eventoRoutes');
-const comunidadeRoutes = require('./routes/comunidadeRoutes'); // Rota do Passo 2
+const comunidadeRoutes = require('./routes/comunidadeRoutes');
 
 const app = express();
+
+// --- CONFIGURAÇÕES ESSENCIAIS ---
+app.use(cors()); // 2. Ativação do CORS (Libera acesso para o Front-end)
 app.use(express.json());
 
 // CONEXÃO COM BANCO
@@ -20,9 +24,20 @@ mongoose.connect(process.env.MONGO_URI)
 
 // --- REGISTRO DE ROTAS MODULARES ---
 app.use('/eventos', eventoRoutes);
-app.use('/comunidades', comunidadeRoutes); // Ativa o Passo 2: POST /comunidades
+app.use('/comunidades', comunidadeRoutes);
 
-// --- ROTA: CADASTRO (Passo 1) ---
+// --- ROTA: USUÁRIOS (Dashboard) ---
+// Adicionada para que o fetch('.../usuarios') do seu script.js funcione
+app.get('/usuarios', async (req, res) => {
+  try {
+    const usuarios = await User.find().select('nome pontos');
+    res.json(usuarios);
+  } catch (error) {
+    res.status(500).json({ erro: "Erro ao buscar usuários para o dashboard." });
+  }
+});
+
+// --- ROTA: CADASTRO ---
 app.post('/usuarios/cadastro', async (req, res) => {
   console.log("📝 Recebendo novo cadastro...");
   try {
@@ -60,20 +75,9 @@ app.post('/usuarios/login', async (req, res) => {
   }
 });
 
-// --- ROTA: LISTAR TODOS ---
-app.get('/usuarios/todos', async (req, res) => {
-  try {
-    const usuarios = await User.find().select('-senha');
-    res.json(usuarios);
-  } catch (error) {
-    res.status(500).json({ erro: "Erro ao buscar a lista." });
-  }
-});
-
-// --- ROTA: RANKING GLOBAL (Novidade) ---
+// --- ROTA: RANKING GLOBAL ---
 app.get('/usuarios/ranking', async (req, res) => {
   try {
-    // Busca todos os usuários, ordena pelos pontos (maior para menor) e limita aos 10 melhores
     const ranking = await User.find()
       .select('nome pontos') 
       .sort({ pontos: -1 })
@@ -85,10 +89,10 @@ app.get('/usuarios/ranking', async (req, res) => {
   }
 });
 
-// --- ROTA: DELETAR (Segurança ajustada) ---
+// --- ROTA: DELETAR ---
 app.delete('/usuarios/deletar/:id', auth, async (req, res) => {
   const idDaUrl = req.params.id; 
-  const idDoToken = req.usuarioId; // req.usuarioId já é a string do ID
+  const idDoToken = req.usuarioId;
 
   try {
     if (idDaUrl !== idDoToken) {

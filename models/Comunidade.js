@@ -2,14 +2,21 @@ const mongoose = require('mongoose');
 
 const ComunidadeSchema = new mongoose.Schema({
   nome: { type: String, required: true, unique: true },
-  // O Passo 2 pede um array de objetos de quiz
+  
+  // PASSO 2: Cada comunidade nasce com seus quizzes
   quizzes: [{
     pergunta: { type: String, required: true },
-    opcoes: [{ type: String, required: true }], // Array de strings (A, B, C, D)
-    correta: { type: String, required: true }  // A resposta certa
+    alternativas: [{ type: String, required: true }], // Array de opções
+    correta: { type: String, required: true }        // A resposta certa
   }],
-  // Lista de IDs de usuários que entraram na comunidade (Passo 3)
-  membros: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+
+  // PASSO 3: Lista de IDs de usuários vinculados
+  membros: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' 
+  }],
+
+  createdAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Comunidade', ComunidadeSchema);
