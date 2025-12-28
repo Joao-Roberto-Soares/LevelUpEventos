@@ -1,92 +1,88 @@
 🛡️ LevelUp - Motor de Gamificação (Back-end)
 
-Este é o servidor robusto que gerencia toda a lógica de mundos, comunidades, quizzes e rankings do projeto LevelUp. O sistema foi construído seguindo os 5 passos essenciais de arquitetura de dados e gamificação.
-🏗️ Arquitetura do Sistema
+Este projeto é um motor de gamificação robusto desenvolvido para gerenciar usuários, comunidades temáticas, quizzes e rankings dinâmicos. O sistema permite que usuários entrem em diferentes "mundos", respondam desafios e acumulem pontos tanto de forma local quanto global.
+🛠️ Tecnologias e Dependências
 
-O Back-end utiliza a stack MERN (focada em Node/Express/Mongo), estruturada da seguinte forma:
+    Express: Framework web para criação das rotas.
 
-    Autenticação JWT: Segurança baseada em tokens para proteger as ações dos usuários.
+    Mongoose: ODM para conexão e modelagem com MongoDB.
 
-    Banco de Dados NoSQL: Modelagem flexível para permitir que comunidades cresçam e quizzes sejam adicionados dinamicamente.
+    CORS: Middleware para permitir o acesso do Front-end ao Back-end.
 
-    Relacionamento Bidirecional: Usuários e Comunidades estão conectados, permitindo consultas rápidas em ambos os sentidos.
+    JSONWebToken (JWT): Segurança para autenticação de sessões.
 
-🚀 Os 5 Passos Implementados
+    BcryptJS: Criptografia de senhas.
 
-Conforme o planejamento estratégico, o servidor entrega as seguintes funcionalidades:
-1. Identidade e Cadastro
+    Dotenv: Gerenciamento de variáveis de ambiente.
 
-Implementado via auth.js e rotas de usuário. Garante que cada "jogador" seja único, com senhas criptografadas via Bcrypt.
+🏗️ Como os Documentos Conversam (Data Architecture)
 
-    Rota Principal: POST /usuarios/cadastro
+O segredo do funcionamento deste sistema está na interconectividade entre as coleções do MongoDB. Embora sejam documentos separados, eles trocam informações através de referências de IDs e subdocumentos:
+1. O Vínculo Usuário ↔ Comunidade
 
-2. Criação de Mundos (Comunidades)
+Quando um usuário clica em "Entrar na Comunidade", o sistema realiza uma operação dupla para garantir que ambos se "conheçam":
 
-Permite a criação de nichos específicos (ex: Marvel, Harry Potter). Cada mundo carrega seu próprio array de objetos de Quiz.
+    Na Coleção Comunidades: O ID do usuário é inserido no array membros. Isso permite que a comunidade saiba quem faz parte dela.
 
-    Rota Principal: POST /comunidades
+    Na Coleção Users: O ID da comunidade é inserido dentro de um objeto no array progresso.
 
-3. Vínculo de Membros (O "Pacto")
+2. O Sistema de Pontuação Dupla
 
-Quando um usuário entra em um mundo, o ID dele é registrado na comunidade e o ID da comunidade é registrado no progresso do usuário.
+Para entregar tanto um Ranking Global quanto um Ranking Local, o documento do Usuário armazena os pontos de duas formas:
 
-    Rota Principal: POST /comunidades/:id/entrar
+    pontos (Raiz): Um número inteiro que acumula cada acerto do usuário em qualquer lugar do sistema. É usado para o Ranking Geral.
 
-4. Engine de Pontuação
+    progresso[].pontos (Subdocumento): Cada objeto dentro do array de progresso tem seu próprio contador de pontos. Isso isola o desempenho do usuário: ele pode ser "Nível 10" na Marvel e "Nível 2" no Harry Potter.
 
-Motor que valida respostas. Ao acertar um quiz, o sistema utiliza o operador $inc do MongoDB para somar pontos em tempo real, sem sobrescrever os anteriores.
+3. Fluxo de uma Resposta (Quiz)
 
-    Rota Principal: POST /comunidades/:id/responder
+    O Front-end envia o perguntaIndex e a resposta.
 
-5. Sistema de Rankings Duplo
+    O Back-end busca o documento da Comunidade para validar se a resposta está correta.
 
-    Global: Lista os melhores jogadores de todo o ecossistema.
+    Se correta, o Back-end localiza o documento do Usuário e, usando o operador $inc, atualiza simultaneamente o total global e o total dentro do objeto de progresso que possui o ID daquela comunidade específica.
 
-    Local: Lista os melhores jogadores de uma comunidade específica.
+🚀 Implementação dos 5 Passos (Requisitos do Projeto)
 
-    Rotas: /usuarios/ranking (Global) e /comunidades/:id/ranking (Local)
+    Identidade: Cadastro e Login com proteção JWT e Bcrypt.
 
-🛠️ Endpoints para Testes (API Reference)
-👤 Usuários
+    Mundos: Coleção Comunidades com esquemas de Quizzes embutidos.
 
-    POST /usuarios/cadastro: Cria novo perfil.
+    Vínculo: Lógica de entrada que popula membros e progresso.
 
-    POST /usuarios/login: Retorna o Token de acesso.
+    Pontuação: Engine de validação de resposta com atualização atômica de saldo.
 
-    GET /usuarios/ranking: Retorna o Top Global.
+    Rankings:
 
-🏰 Comunidades
+        Global: User.find().sort({ pontos: -1 })
 
-    GET /comunidades: Lista todos os mundos disponíveis.
+        Local: Filtra usuários que possuem o ID da comunidade no progresso e ordena pelos pontos internos desse array.
 
-    POST /comunidades/:id/entrar: Vincula o usuário logado ao mundo.
+📡 Lista de Endpoints (API Reference)
+Usuários
 
-    POST /comunidades/:id/responder: Envia resposta e processa pontos (+10 por acerto).
+    POST /usuarios/cadastro: Criar conta.
 
-    GET /comunidades/:id/ranking: Ranking exclusivo daquele mundo.
+    POST /usuarios/login: Obter Token.
 
-📦 Como Rodar o Projeto
+    GET /usuarios/ranking: Ranking Global.
 
-    Certifique-se de ter o Node.js instalado.
+Comunidades
 
-    Clone o repositório.
+    POST /comunidades: Criar novo mundo (Protegido).
 
-    Instale as dependências:
-    Bash
+    GET /comunidades: Listar todos os mundos.
 
-npm install
+    POST /comunidades/:id/entrar: Unir-se a um mundo (Protegido).
 
-Configure sua MONGO_URL no arquivo .env ou server.js.
+    POST /comunidades/:id/responder: Responder quiz e ganhar pontos (Protegido).
 
-Inicie o servidor:
-Bash
+    GET /comunidades/:id/ranking: Ranking específico daquele mundo.
 
-    node server.js
+🌐 Infraestrutura e Serviços
 
-🛡️ Regras de Negócio Implementadas
+    MongoDB Atlas: Banco de dados NoSQL hospedado na nuvem.
 
-    Proteção: Você não pode ganhar pontos se não estiver autenticado.
+    CORS: Configurado via app.use(cors()) para permitir integração com o Front-end.
 
-    Vínculo Único: O sistema impede que você entre duas vezes na mesma comunidade (evita duplicidade de progresso).
-
-    Integridade: Ao responder, o sistema verifica se você realmente faz parte daquela comunidade específica.
+    Thunder Client: Utilizado para testes de integração e validação de rotas.
