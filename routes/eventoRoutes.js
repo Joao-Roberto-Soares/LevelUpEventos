@@ -36,4 +36,30 @@ router.get('/todos', async (req, res) => {
     }
 });
 
+// ROTA: Deletar um evento
+// DELETE https://levelupeventos.onrender.com/eventos/deletar/:id
+router.delete('/deletar/:id', auth, async (req, res) => {
+    try {
+        const idEvento = req.params.id;
+        const idUsuarioLogado = req.usuarioId; // Lembra que nosso auth.js já limpa o ID?
+
+        const evento = await Event.findById(idEvento);
+
+        if (!evento) {
+            return res.status(404).json({ mensagem: "❌ Evento não encontrado." });
+        }
+
+        // TRAVA DE SEGURANÇA: Só o dono pode deletar
+        if (evento.criadoPor.toString() !== idUsuarioLogado) {
+            return res.status(403).json({ mensagem: "🚫 Acesso negado! Você não é o dono deste evento." });
+        }
+
+        await Event.findByIdAndDelete(idEvento);
+        res.json({ mensagem: "🗑️ Evento removido com sucesso!" });
+
+    } catch (erro) {
+        res.status(500).json({ mensagem: "❌ Erro ao deletar evento", erro: erro.message });
+    }
+});
+
 module.exports = router;
