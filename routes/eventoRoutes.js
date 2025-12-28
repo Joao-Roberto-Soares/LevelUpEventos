@@ -14,7 +14,7 @@ router.post('/criar', auth, async (req, res) => {
             descricao,
             data,
             local,
-            criadoPor: req.usuarioId // O ID vem do Token através do middleware auth
+            criadoPor: req.usuario.id // O ID vem do Token através do middleware auth
         });
 
         await novoEvento.save();
