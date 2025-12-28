@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
-const auth = require('./auth'); // Ajuste o caminho se seu auth.js estiver em outra pasta
+const auth = require('../auth'); // Ajuste o caminho se seu auth.js estiver em outra pasta
 
 // ROTA: Criar um novo evento
 // POST https://levelupeventos.onrender.com/eventos/criar
