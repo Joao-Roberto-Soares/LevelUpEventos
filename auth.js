@@ -1,23 +1,24 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-    // 1. Pega o token enviado pelo Thunder Client/Insomnia
-    const token = req.header('Authorization');
+    const authHeader = req.header('Authorization');
 
-    // 2. Se não enviar nada, bloqueia
-    if (!token) {
+    if (!authHeader) {
         return res.status(401).json({ mensagem: "Acesso negado! Token não fornecido." });
     }
 
     try {
-        // 3. Remove a palavra 'Bearer ' caso ela exista e valida o token
-        const tokenLimpo = token.replace('Bearer ', '');
-        const verificado = jwt.verify(tokenLimpo, process.env.JWT_SECRET);
+        const token = authHeader.replace('Bearer ', '');
+        const verificado = jwt.verify(token, process.env.JWT_SECRET);
         
-        // 4. Salva os dados do usuário dentro da requisição (útil para o futuro)
-        req.usuarioId = verificado;
+        // PADRONIZAÇÃO:
+        // Se o seu login gerou { id: '...' }, pegamos o .id
+        // Se gerou apenas a string, usamos o verificado direto
+        req.usuarioId = verificado.id || verificado;
         
-        // 5. Libera para a próxima função (o Delete)
+        // Log para te ajudar a debugar no Render (pode remover depois)
+        console.log("🔐 Usuário Autenticado ID:", req.usuarioId);
+        
         next();
     } catch (err) {
         res.status(400).json({ mensagem: "Token inválido ou expirado!" });
