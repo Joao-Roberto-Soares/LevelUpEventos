@@ -85,11 +85,13 @@ app.get('/usuarios/todos', async (req, res) => {
 // --- ROTA: DELETAR (COM TRAVA DE SEGURANÇA) ---
 app.delete('/usuarios/deletar/:id', auth, async (req, res) => {
   const idDaUrl = req.params.id; 
-  const idDoToken = req.usuarioId.id; 
+  // AJUSTE AQUI: req.usuarioId já contém o ID direto devido ao novo auth.js
+  const idDoToken = req.usuarioId; 
 
   console.log(`🗑️ Tentativa de DELETE | Alvo: ${idDaUrl} | Logado: ${idDoToken}`);
 
   try {
+    // Verificação simples entre duas strings
     if (idDaUrl !== idDoToken) {
       console.log("🚫 BLOQUEADO: Tentativa de deletar conta de terceiros!");
       return res.status(403).json({ 
