@@ -1,0 +1,434 @@
+:root {
+  --bg-main: #0f0f14;
+  --bg-surface: #1a1a22;
+  --bg-card: #1f1f2a;
+
+  --primary: #d32f2f;        /* vermelho LevelUp */
+  --primary-hover: #e53935;
+
+  --accent-gold: #f5c16c;    /* dourado vivo */
+  --accent-gold-soft: rgba(245,193,108,0.2);
+
+  --text-main: #ffffff;
+  --text-muted: rgba(255,255,255,0.65);
+
+  --success: #2ecc71;
+  --error: #e74c3c;
+}
+
+/* =====================================================
+   RESET / BASE
+===================================================== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: var(--bg-surface);
+}
+
+.navbar-center a {
+  margin: 0 14px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-right button {
+  background: var(--error);
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+.hero {
+  text-align: center;
+  padding: 48px 20px;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-surface),
+    var(--bg-main)
+  );
+}
+
+.hero span {
+  color: var(--primary);
+}
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+.section {
+  max-width: 1300px;
+  margin: 0 auto 64px;
+  padding: 0 24px;
+}
+
+.section-center {
+  text-align: center;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* =====================================================
+   SCROLL HORIZONTAL
+===================================================== */
+.card-row {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  scroll-snap-type: x mandatory;
+}
+
+.card-row::-webkit-scrollbar {
+  height: 10px;
+}
+
+.card-row::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+/* =====================================================
+   CARD
+===================================================== */
+.card {
+  min-width: 300px;
+  max-width: 300px;
+  background: var(--bg-surface-light);
+  border-radius: 18px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  box-shadow: 0 0 25px rgba(0,0,0,0.45);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  border: solid rgb(43, 42, 42) 1px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-content {
+  background-color: black;
+  padding: 16px;
+}
+
+.card-content p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* =====================================================
+   BOTÕES
+===================================================== */
+button {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 500;
+}
+
+button:hover {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  background: #444;
+}
+
+/* =====================================================
+   RANKING (DOURADO SUAVE, SEM EXAGERO)
+===================================================== */
+.ranking-card {
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 28px;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    var(--gold-soft),
+    rgba(255,215,0,0.06)
+  );
+  box-shadow: 0 0 35px rgba(255,215,0,0.15);
+  background-color: #ff9f04;
+}
+
+.ranking-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+#ranking-preview-card {
+  color: white;
+  font-weight: bold;
+}
+
+/* =====================================================
+   MODAL GLOBAL
+===================================================== */
+/* =====================================================
+   MODAL OVERLAY – SEM TRANSPARÊNCIA (APENAS BLUR)
+===================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  /* 🔥 Fundo sólido (sem transparência visível) */
+  background: rgba(15, 15, 20, 0.85);
+
+  /* 🔥 Blur aplicado ao fundo */
+  backdrop-filter: blur(10px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: var(--bg-surface-light);
+  width: 90%;
+  max-width: 900px;
+  min-height: 520px;
+  border-radius: 22px;
+  padding: 32px;
+  box-shadow: 0 0 50px rgba(0,0,0,0.65);
+  position: relative;
+  overflow-y: auto;
+}
+
+/* =====================================================
+   BOTÃO FECHAR MODAL
+===================================================== */
+.modal-close {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #fff;
+}
+
+
+
+/* =====================================================
+   QUIZ
+===================================================== */
+.btn-alternativa {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #2f274a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.btn-alternativa.correta {
+  background: var(--success) !important;
+}
+
+.btn-alternativa.errada {
+  background: var(--error) !important;
+}
+
+/* =====================================================
+   AUTH PAGE (LOGIN / CADASTRO)
+===================================================== */
+
+.auth-page {
+  height: 100vh;
+  background: linear-gradient(
+    to bottom right,
+    #0f0f14,
+    #1a1a22
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* CONTAINER CENTRAL */
+.auth-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MODAL */
+.auth-modal {
+  background: var(--bg-card);
+  padding: 36px;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  text-align: left;
+}
+
+/* BRAND */
+.auth-brand {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.auth-brand span {
+  color: var(--accent-gold);
+}
+
+/* TÍTULOS */
+.auth-modal h2 {
+  margin-bottom: 4px;
+}
+
+.auth-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+/* FORM */
+.auth-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-modal input {
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #2a2a35;
+  color: #fff;
+}
+
+.auth-modal input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+/* BOTÃO */
+.btn-primary {
+  margin-top: 8px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+/* LINKS */
+.auth-footer {
+  margin-top: 18px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.auth-footer a {
+  color: var(--accent-gold);
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* FOOTER GLOBAL */
+.auth-footer-global {
+  padding: 20px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.45);
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+.footer {
+  text-align: center;
+  margin-top: 96px;
+  padding: 48px 24px;
+  background: var(--bg-surface);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.footer-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+/* ================= AUTH BACKGROUND ================= */
+.auth-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(111,124,255,0.18), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(255,215,0,0.12),transparent 45%),
+    linear-gradient(135deg, #0e0b16, #141022);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

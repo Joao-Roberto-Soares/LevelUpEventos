@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>LevelUp Eventos</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <nav class="navbar">
+    <div class="navbar-left">⚡ <strong>LevelUp Eventos</strong></div>
+
+    <div class="navbar-center">
+      <a href="#eventos">Eventos</a>
+      <a href="#comunidades">Comunidades</a>
+      <a href="#ranking">Ranking</a>
+    </div>
+
+    <div class="navbar-right">
+      <span id="navbar-usuario"></span>
+      <button class="btn-logout" id="btn-logout">Sair</button>
+    </div>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <h1>Bem-vindo ao <span>LevelUp</span></h1>
+    <p>Participe de eventos, complete quizzes e suba no ranking</p>
+  </section>
+
+  <!-- ================= EVENTOS ================= -->
+  <section class="section" id="eventos">
+    <h2>📅 Eventos em Destaque</h2>
+    <div class="card-row" id="lista-eventos"></div>
+  </section>
+
+  <!-- ================= COMUNIDADES ================= -->
+  <section class="section" id="comunidades">
+    <div class="section-header">
+      <h2>👥 Comunidades de quiz</h2>
+      <button id="btn-adicionar-comunidade">+ Adicionar</button>
+    </div>
+
+    <div class="card-row" id="lista-comunidades-usuario"></div>
+  </section>
+
+  <!-- ================= RANKING ================= -->
+  <section class="section section-center" id="ranking">
+    <h2>🏆 Ranking Global</h2>
+    <div class="ranking-card" id="ranking-preview-card"></div>
+  </section>
+
+  <!-- ================= MODAL GLOBAL ================= -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" id="modal-content">
+      <button class="modal-close" onclick="fecharModal()">✖</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <span>© 2026 • Todos os direitos reservados</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>
