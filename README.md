@@ -119,6 +119,7 @@
     Criptografia de senhas com Bcrypt
 
 ▶️ Como Executar o Projeto
+
     1️⃣ Clonar o repositório
     git clone https://github.com/Joao-Roberto-Soares/LevelUpEventos.git
     cd LevelUpEventos
